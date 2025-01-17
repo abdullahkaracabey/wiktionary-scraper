@@ -10,13 +10,20 @@ export default function parse($: cheerio.CheerioAPI, skeleton: EntrySectionSkele
 	const $row = $root.parent();
 
 	const $heading = $row.next(selectors.definitions.heading.heading);
-	// const $headword = $heading.find(selectors.definitions.heading.headword);
+	
+	const $headword = $heading.find(selectors.definitions.heading.headword);
+
+	console.log("headword", $headword.text())
 	// const lemma = clean($headword.text());
 
 	const $list = $heading.next(selectors.definitions.definitions.definitions.list);
-	const $definitions = $list.children(selectors.definitions.definitions.definitions.definitions);
+	let $definitions = $list.children(selectors.definitions.definitions.definitions.definitions);
+
 	const definitions: Definition[] = [];
+
+
 	for (const definitionElement of $definitions) {
+		console.log("definitionElement", definitionElement)
 		const definition = parseDefinition($, definitionElement);
 		if (definition === undefined) {
 			continue;
@@ -66,6 +73,7 @@ function parseDefinition($: cheerio.CheerioAPI, element: cheerio.Element): Defin
 	}
 
 	const $definitionSection = $root.find(selectors.definitions.definitions.definitions.list).first();
+	console.log("definitionSection", $definitionSection)
 	if ($definitionSection.length !== 0) {
 		const definitions_: Definition[] = [];
 
@@ -111,6 +119,8 @@ function parseDefinition($: cheerio.CheerioAPI, element: cheerio.Element): Defin
 
 	const fields: LabelledTextField[] = [];
 	for (const [labels, value] of fieldsRaw) {
+		console.log("labels", labels)
+		console.log("value", value)
 		if (labels !== undefined) {
 			fields.push({ labels, value });
 		} else {

@@ -25,14 +25,20 @@ export async function get(
 
 	let response;
 	try {
+
+		console.log("fetch", links.definition(lemma, optionsFilled))
 		response = await fetch(links.definition(lemma, optionsFilled), {
 			headers: optionsFilled.userAgent !== undefined ? { "User-Agent": optionsFilled.userAgent } : {},
 		});
+
+		
 	} catch {
 		return undefined;
 	}
 
 	const body = await response.text();
+
+	// console.log("response", body)
 	const $ = cheerio.load(body);
 
 	if (!response.ok) {

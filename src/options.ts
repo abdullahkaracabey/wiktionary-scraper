@@ -1,6 +1,6 @@
 import type { Links } from "./constants/links";
 
-export type SiteLanguage = "en";
+export type SiteLanguage = "en"| "tr";
 
 /** Defines the available options for getting a lemma from the dictionary. */
 export interface ScraperOptions {

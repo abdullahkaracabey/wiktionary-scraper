@@ -25,19 +25,23 @@ export function parse(options: ScraperOptions, $: cheerio.CheerioAPI, lemma: Lem
 
 	const skeletons: EntrySectionSkeleton[] = [];
 	for (const entryElement of $entries) {
+		
 		const skeleton = parseSectionSkeleton($, entryElement, 1);
+
+		
 		if (skeleton === undefined) {
 			continue;
 		}
 
 		skeletons.push(skeleton);
+		console.log("skeleton", skeleton)
 	}
 
 	const skeletonForLanguage = skeletons.find((skeleton) => skeleton.name === options.lemmaLanguage);
 	if (skeletonForLanguage === undefined) {
 		return undefined;
 	}
-
+console.log("skeletonForLanguage", skeletonForLanguage)
 	return parseEntrySkeleton(options, $, skeletonForLanguage, lemma);
 }
 
@@ -88,14 +92,21 @@ function parseEntrySkeleton(
 		if (sectionName === undefined) {
 			return false;
 		}
+		console.log("sectionName", sectionName, options.siteLanguage)	
 
 		const sectionType = sections[options.siteLanguage][sectionName];
+
+		// console.log("sections for siteLanguage", sections[options.siteLanguage])
 		if (sectionType === undefined) {
 			return false;
 		}
+		
+		console.log("sectionType", sectionType)
 
 		return sectionType === "etymology" && sectionIndex !== undefined;
 	});
+
+	console.log("isMultipleEntries", isMultipleEntries)
 	if (isMultipleEntries) {
 		return parseMultipleEtymologies(options, $, skeleton, lemma);
 	}
@@ -127,11 +138,13 @@ function parseMultipleEtymologies(
 		if (sectionName === undefined) {
 			continue;
 		}
-
+		console.log("sectionName", sectionName)
+		console.log("sectionsMapped", sectionsMapped)
 		const sectionType = sectionsMapped[sectionName];
 		if (sectionType === undefined) {
 			continue;
 		}
+		console.log("sectionType", sectionType)
 
 		if (sectionType === "etymology") {
 			etymologySections.push(sectionSkeleton);
